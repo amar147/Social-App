@@ -13,3 +13,7 @@ export enum ProviderEnum{
     SYSTEM='system'
 
 }
+export enum TokenTypeEnum{
+    ACCESS_TOKEN='access',
+    REFRESH_TOKEN='refresh'
+}

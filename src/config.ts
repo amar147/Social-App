@@ -15,3 +15,14 @@ export const IV_LENGTH : number = Number(process.env.IV_LENGTH) || 16;
 export const APP_NAME : string = process.env.APP_NAME || "";
 export const APP_PASSWORD : string = process.env.APP_PASSWORD || "";
 export const APP_EMAIL : string = process.env.APP_EMAIL || "";
+
+
+export const ACCESS_TOKEN_USER_SECRET : string = process.env.ACCESS_TOKEN_USER_SECRET || "" as string;
+export const ACCESS_TOKEN_ADMIN_SECRET : string = process.env.ACCESS_TOKEN_ADMIN_SECRET || "" as string;
+
+export const REFRESH_TOKEN_USER_SECRET : string = process.env.REFRESH_TOKEN_USER_SECRET || "" as string;
+export const REFRESH_TOKEN_ADMIN_SECRET : string = process.env.REFRESH_TOKEN_ADMIN_SECRET || "" as string;
+
+
+export const ACCESS_TOKEN_EXPIRES_IN : number = Number(process.env.ACCESS_TOKEN_EXPIRES_IN) || 1800;  
+export const REFRESH_TOKEN_EXPIRES_IN : number = Number(process.env.REFRESH_TOKEN_EXPIRES_IN) || 86400 * 365;  

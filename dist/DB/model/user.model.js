@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModel = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const enum_1 = require("../../common/enum");
+const hash_security_1 = require("../../common/security/hash.security");
+const encryption_security_1 = require("../../common/security/encryption.security");
 const userSchema = new mongoose_1.default.Schema({
     firstName: {
         type: String,
@@ -44,7 +46,19 @@ const userSchema = new mongoose_1.default.Schema({
         type: String,
         enum: Object.values(enum_1.ProviderEnum),
         default: enum_1.ProviderEnum.SYSTEM
-    }
+    },
+    id: {
+        type: String,
+        default: function () {
+            return new mongoose_1.default.Types.ObjectId().toString();
+        }
+    },
+    status: {
+        type: Number,
+        enum: enum_1.AccStatusEnum,
+        default: enum_1.AccStatusEnum.ACTIVE
+    },
+    changeStatusAt: Date,
 }, {
     timestamps: true,
     toObject: { virtuals: true },
@@ -63,5 +77,15 @@ userSchema.virtual('username')
 })
     .get(function () {
     return `${this.firstName || ''} ${this.lastName || ''}`.trim();
+});
+userSchema.pre('save', async function () {
+    if (this.isModified("password")) {
+        this.password = await (0, hash_security_1.hash)(this.password);
+    }
+    if (this.isModified("phone")) {
+        this.phone = await (0, encryption_security_1.encryption)(this.phone);
+    }
+});
+userSchema.post('save', async function (doc) {
 });
 exports.UserModel = mongoose_1.default.models.User || mongoose_1.default.model('User', userSchema);

@@ -1,6 +1,8 @@
-import { GenderEnum, ProviderEnum,RoleEnum } from "../enum";
+import { AccStatusEnum, GenderEnum, ProviderEnum,RoleEnum } from "../enum";
 
 export interface IUser {
+    status: AccStatusEnum;
+    changeStatusAt?:Date;
     firstName: string;
     lastName: string;
     username?: string;
@@ -17,4 +19,5 @@ export interface IUser {
     changeCredentials?: Date;
     createdAt?: string;
     updated?:string;
+    id?: string;
 }

@@ -9,8 +9,8 @@ import { cacheService } from "../common/services/cache.service";
 export const connectDB = async (app: Application, port: number) => {
     try {
         await mongoose.connect(DB_URI);
+        console.log("Database connected successfully")
         await cacheService.connectRedis();
-
         app.listen(port, () => {console.log(`Server is running on port ${port}`)});
 
     } catch (error) {

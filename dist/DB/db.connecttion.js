@@ -10,6 +10,7 @@ const cache_service_1 = require("../common/services/cache.service");
 const connectDB = async (app, port) => {
     try {
         await mongoose_1.default.connect(config_1.DB_URI);
+        console.log("Database connected successfully");
         await cache_service_1.cacheService.connectRedis();
         app.listen(port, () => { console.log(`Server is running on port ${port}`); });
     }

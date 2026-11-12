@@ -8,10 +8,10 @@ const node_crypto_1 = __importDefault(require("node:crypto"));
 const config_1 = require("../../config");
 const encryption = async (plaintext) => {
     const iv = node_crypto_1.default.randomBytes(Number(config_1.IV_LENGTH));
-    const cipher = node_crypto_1.default.createCipheriv('aes-256-cbc', config_1.ENC_KEY, iv);
+    const key = Buffer.from(config_1.ENC_KEY, 'hex');
+    const cipher = node_crypto_1.default.createCipheriv('aes-256-cbc', key, iv);
     let encryptData = cipher.update(plaintext, "utf-8", "hex");
     encryptData += cipher.final("hex");
-    console.log({ cipher, encryptData });
-    return `${iv}::${encryptData}`;
+    return `${iv.toString('hex')}::${encryptData}`;
 };
 exports.encryption = encryption;
