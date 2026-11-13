@@ -7,9 +7,18 @@ const express_1 = require("express");
 const middleware_1 = require("../../middleware");
 const auth_service_1 = __importDefault(require("./auth.service"));
 const auth_validation_1 = require("./auth.validation");
+const multer_1 = require("../../common/utils/multer");
 const router = (0, express_1.Router)({ strict: true, caseSensitive: true });
-router.post('/signup', (0, middleware_1.Validation)(auth_validation_1.signupSchema), (0, middleware_1.ResponseFormatter)(async (req, res, next) => {
-    const data = await auth_service_1.default.signup(req.body);
+router.post('/signup', (0, middleware_1.localMulterMiddleware)({
+    multerMiddleware: (0, multer_1.localFileUpload)({ fileSize: 2 }).single('avatar'),
+    validation: multer_1.fileValidation.image,
+    customPath: 'users',
+    isRequired: false,
+}), (0, middleware_1.Validation)(auth_validation_1.signupSchema), (0, middleware_1.ResponseFormatter)(async (req, res, next) => {
+    const data = await auth_service_1.default.signup({
+        ...req.body,
+        avatar: req.file?.path,
+    });
     return { data };
 }));
 router.post('/login', (0, middleware_1.Validation)(auth_validation_1.loginSchema), (0, middleware_1.ResponseFormatter)(async (req, res, next) => {

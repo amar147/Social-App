@@ -3,7 +3,7 @@ import {authController} from './modules'
 import { globalErrorHandle } from './middleware';
 import { connectDB } from './DB/db.connecttion';
 import { PORT } from './config';
-import { sendEmail } from './common/utils/email';
+// import { sendEmail } from './common/utils/email';
 const app: express.Application = express();
 app.use(express.json())
 

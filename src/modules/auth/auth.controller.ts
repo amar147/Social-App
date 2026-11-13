@@ -1,6 +1,6 @@
 import {Router  } from 'express'
 import type { Request , Response ,NextFunction } from 'express'
-import { ResponseFormatter, Validation } from '../../middleware'
+import { localMulterMiddleware, ResponseFormatter, Validation } from '../../middleware'
 import  AuthServices  from './auth.service'
 import { changePasswordSchema, 
     confirmEmailSchema, 
@@ -9,18 +9,27 @@ import { changePasswordSchema,
     resetPasswordSchema,
     sendEmailOtpSchema,
     signupSchema } from './auth.validation'
+import { fileValidation, localFileUpload } from '../../common/utils/multer'
 const router  =Router({strict:true , caseSensitive:true })
-
-router.post('/signup',Validation(signupSchema) ,ResponseFormatter(
-    async(
-    req:Request ,
-    res:Response ,
-    next:NextFunction)=>{
-        
-        const data = await AuthServices.signup(req.body)
-        return { data }
-    }
-))
+router.post(
+    '/signup',
+    localMulterMiddleware({
+        multerMiddleware: localFileUpload({ fileSize: 2 }).single('avatar'), 
+        validation: fileValidation.image,
+        customPath: 'users',
+        isRequired: false, 
+    }),
+    Validation(signupSchema),
+    ResponseFormatter(
+        async (req: Request, res: Response, next: NextFunction) => {
+            const data = await AuthServices.signup({
+                ...req.body,
+                avatar: req.file?.path, 
+            });
+            return { data };
+        }
+    )
+);
 router.post('/login',Validation(loginSchema) ,ResponseFormatter(
     async(
     req:Request ,
